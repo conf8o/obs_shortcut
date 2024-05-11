@@ -7,3 +7,8 @@ edition = "2021"
 
 [dependencies]
 multiinput = "0.1.0"
+obws = "0.12.0"
+toml = "0.8.12"
+serde = "1.0.201"
+tokio = { version = "1.37.0", features = ["full"] }
+anyhow = "1.0"
