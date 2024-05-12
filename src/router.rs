@@ -1,3 +1,6 @@
+//! インデックスと動作を紐づけるテーブル。ルーターと名付けてる。
+//! 具体的なProcessはprocessesに定義する。
+
 use obws::{Client, Result};
 use futures::future::BoxFuture;
 pub type ProcessIndex = usize;

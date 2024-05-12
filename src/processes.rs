@@ -1,3 +1,7 @@
+//! 具体的な動作の定義
+//! init_processesにProcessIndex(= usize)と動作のペアを設定する。(TODO: 書き方もう少し簡素化したい。)
+//! eventsには、デバイスの入力 → ProcessIndexを割り出す定義を行う。
+
 use obws::{Client, Result};
 use crate::router::{ ProcessIndex, Process };
 
