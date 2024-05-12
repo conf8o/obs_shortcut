@@ -2,23 +2,30 @@ extern crate multiinput;
 
 use multiinput::*;
 use anyhow::Result;
-mod router;
 use serde::Deserialize;
 use obws::Client;
 use std::fs;
 use toml;
 
+mod router;
+mod processes;
+
 #[derive(Debug, Deserialize)]
-pub struct ObsClientConfig {
+struct Config {
+    obs_client: ObsClientConfig
+}
+
+#[derive(Debug, Deserialize)]
+struct ObsClientConfig {
     host: Option<String>,
     port: Option<u16>,
     password: Option<String>
 }
 
-pub async fn init_client_from_config(path: &str) -> Result<Client> {
+async fn init_client_from_config(path: &str) -> Result<Client> {
     let s = fs::read_to_string(path)?;
-    let config: ObsClientConfig = toml::from_str(s.as_str())?;
-    match config {
+    let config: Config = toml::from_str(s.as_str())?;
+    match config.obs_client {
         ObsClientConfig { host: Some(host), port: Some(port), password } => {
             Result::Ok(Client::connect(host, port, password).await?)
         }
@@ -26,17 +33,13 @@ pub async fn init_client_from_config(path: &str) -> Result<Client> {
         _ => {
             Result::Err(anyhow::anyhow!("Invalid config."))
         }
-            
     }
 }
 
-const PRESS_W: usize = 1;
 
-fn init_router(obs_client: &Client) -> router::Router {
+fn init_router() -> router::Router {
     let router  = router::Router::init(
-        vec![
-            (PRESS_W, router::no_process)
-        ]
+        processes::init_processes()
     );
 
     router
@@ -45,7 +48,9 @@ fn init_router(obs_client: &Client) -> router::Router {
 #[tokio::main]
 async fn main() -> Result<()> {
 
-    let client = init_client_from_config("./obs_connetion.toml").await?;
+    let client = init_client_from_config("./config.toml").await?;
+    let router = init_router();
+    router.process(&client, 1).await?;
 
     let mut manager = RawInputManager::new().unwrap();
     manager.register_devices(DeviceType::Joysticks(XInputInclude::True));
