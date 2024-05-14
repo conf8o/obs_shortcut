@@ -14,7 +14,7 @@ pub struct Router {
 impl Router {
     pub async fn process(&self, client: &Client, index: ProcessIndex) -> Result<()>  {
         let handle = &self.processes[index];
-        (handle(client)).await
+        handle(client).await
     }
 
     pub fn init(handler_pairs: Vec<(ProcessIndex, Process)>) -> Router {

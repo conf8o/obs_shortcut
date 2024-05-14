@@ -5,8 +5,8 @@
 use obws::{Client, Result};
 use crate::router::{ ProcessIndex, Process };
 
-const PRESS_W: ProcessIndex = 0;
-const PRESS_B: ProcessIndex = 1;
+pub const PRESS_W: ProcessIndex = 0;
+pub const PRESS_B: ProcessIndex = 1;
 
 pub fn init_processes() -> Vec<(ProcessIndex, Process)> {
     vec![

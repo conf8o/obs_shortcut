@@ -9,6 +9,8 @@ use toml;
 
 mod router;
 mod processes;
+mod events;
+
 
 #[derive(Debug, Deserialize)]
 struct Config {
