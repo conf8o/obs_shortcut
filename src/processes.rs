@@ -5,13 +5,13 @@
 use obws::{Client, Result};
 use crate::router::{ ProcessIndex, Process };
 
-pub const PRESS_W: ProcessIndex = 0;
-pub const PRESS_B: ProcessIndex = 1;
+pub const W: ProcessIndex = 0;
+pub const B: ProcessIndex = 1;
 
 pub fn init_processes() -> Vec<(ProcessIndex, Process)> {
     vec![
-        (PRESS_W, |client: &Client| Box::pin(set_current_program_scene(client, "WHAT HOW"))),
-        (PRESS_B, |client: &Client| Box::pin(set_current_program_scene(client, "Boy's Staredown")))
+        (W, |client: &Client| Box::pin(set_current_program_scene(client, "WHAT HOW"))),
+        (B, |client: &Client| Box::pin(set_current_program_scene(client, "Boy's Staredown")))
     ]
 }
 

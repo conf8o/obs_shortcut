@@ -17,10 +17,10 @@ impl Router {
         handle(client).await
     }
 
-    pub fn init(handler_pairs: Vec<(ProcessIndex, Process)>) -> Router {
-        let max_index = *handler_pairs.iter().map( |(i, _)| i ).max().unwrap();
+    pub fn init(process_pairs: &Vec<(ProcessIndex, Process)>) -> Router {
+        let max_index = *process_pairs.iter().map( |(i, _)| i ).max().unwrap();
         let mut processes: Vec<Process> = vec![|client| Box::pin(no_process(client)); max_index+1];
-        for (index, process) in &handler_pairs {
+        for (index, process) in process_pairs {
             processes[*index] = *process;
         }
 
