@@ -68,7 +68,14 @@ impl ObsProcessSystem {
         let router = &self.router;
         let event_table = &mut self.event_table;
         if let Some(index) = &event_table.handle_from_raw_event(raw_event) {
-            let r = block_on(router.process(&client, *index)).unwrap();
+            let r = block_on(router.process(&client, *index));
+
+            match r {
+                Ok(()) => (),
+                Err(e) => {
+                    println!("Error on OBS process! {:?}", e)
+                }
+            }
         }
     }
 }

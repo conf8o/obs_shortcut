@@ -17,7 +17,8 @@ impl Router {
     }
 
     pub fn init(process_pairs: &Vec<(usize, Process)>) -> Router {
-        let max_index = *process_pairs.iter().map( |(i, _)| i ).max().unwrap();
+        let max_index = 26;
+        // *process_pairs.iter().map( |(i, _)| i ).max().unwrap();
         let mut processes: Vec<Process> = vec![|client| Box::pin(no_process(client)); max_index+1];
         for (index, process) in process_pairs {
             processes[*index] = *process;

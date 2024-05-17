@@ -46,7 +46,8 @@ impl EventTable {
     }
 
     pub fn init(indices: &Vec<usize>) -> EventTable {
-        let max_index = indices.iter().max().unwrap();
+        let max_index = 26;
+        // indices.iter().max().unwrap();
         let mut states: Vec<Option<Event>> = vec![None; max_index+1];
 
         for index in indices {
