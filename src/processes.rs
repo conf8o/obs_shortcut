@@ -39,6 +39,7 @@ pub fn init_processes() -> Vec<(usize, Process)> {
         (D, |client: &Client| Box::pin(set_current_program_scene(client, "DIRECTED BY ROBERT"))),
         (E, |client: &Client| Box::pin(set_current_program_scene(client, "Explosion"))),
         (F, |client: &Client| Box::pin(set_current_program_scene(client, "FACEPALM"))),
+        (M, |client: &Client| Box::pin(set_current_program_scene(client, "メイン"))),
         (S, |client: &Client| Box::pin(set_current_program_scene(client, "SPACE CAT"))),
         (W, |client: &Client| Box::pin(set_current_program_scene(client, "WHAT HOW"))),
         (R, |client: &Client| Box::pin(set_current_program_scene(client, "WHO R U")))
