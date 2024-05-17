@@ -3,7 +3,6 @@
 
 use obws::{Client, Result};
 use futures::future::BoxFuture;
-pub type ProcessIndex = usize;
 pub type Process = fn (&Client) -> BoxFuture<'_, Result<()>>;
 
 
@@ -12,12 +11,12 @@ pub struct Router {
 }
 
 impl Router {
-    pub async fn process(&self, client: &Client, index: ProcessIndex) -> Result<()>  {
+    pub async fn process(&self, client: &Client, index: usize) -> Result<()>  {
         let handle = &self.processes[index];
         handle(client).await
     }
 
-    pub fn init(process_pairs: &Vec<(ProcessIndex, Process)>) -> Router {
+    pub fn init(process_pairs: &Vec<(usize, Process)>) -> Router {
         let max_index = *process_pairs.iter().map( |(i, _)| i ).max().unwrap();
         let mut processes: Vec<Process> = vec![|client| Box::pin(no_process(client)); max_index+1];
         for (index, process) in process_pairs {

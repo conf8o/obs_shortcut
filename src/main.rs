@@ -1,5 +1,4 @@
 use anyhow::{Result, anyhow};
-use router::ProcessIndex;
 use futures::executor::block_on;
 use serde::Deserialize;
 use obws::Client;
@@ -51,7 +50,7 @@ fn init_router_and_table() -> (router::Router, events::EventTable) {
     let process_pairs = processes::init_processes();
     let router  = router::Router::init(&process_pairs);
 
-    let process_indices = process_pairs.iter().map(|(i, _)| *i).collect::<Vec<ProcessIndex>>();
+    let process_indices = process_pairs.iter().map(|(i, _)| *i).collect::<Vec<usize>>();
     let table = events::EventTable::init(&process_indices);
 
     (router, table)
@@ -151,7 +150,9 @@ unsafe extern "system" fn wnd_proc(hwnd: HWND, msg: u32, wparam: WPARAM, lparam:
                 let raw: &RAWINPUT = &*(data.as_ptr() as *const _);
                 if raw.header.dwType == RIM_TYPEKEYBOARD.0 {
                     let device_handle = raw.header.hDevice;
-                    if device_handle == HANDLE(9635431) {
+
+                    // 起動時、先にdevice_handleを調べる必要がある。
+                    if device_handle == HANDLE(65611) {
                         let keyboard = raw.data.keyboard;
                         let vk = keyboard.VKey;
                         let flag = keyboard.Flags;
@@ -169,23 +170,3 @@ unsafe extern "system" fn wnd_proc(hwnd: HWND, msg: u32, wparam: WPARAM, lparam:
         _ => DefWindowProcA(hwnd, msg, wparam, lparam),
     }
 }
-
-
-// // デバイスリストを取得
-// let mut device_count = 0;
-// GetRawInputDeviceList(Some(ptr::null_mut()), &mut device_count, size_of::<RAWINPUTDEVICELIST>() as u32);
-// let mut devices: Vec<RAWINPUTDEVICELIST> = vec![RAWINPUTDEVICELIST::default(); device_count as usize];
-// GetRawInputDeviceList(Some(devices.as_mut_ptr()), &mut device_count, size_of::<RAWINPUTDEVICELIST>() as u32);
-
-// // デバイス情報を取得して表示
-// for device in &devices {
-//     let mut device_name_size = 0;
-//     GetRawInputDeviceInfoW(device.hDevice, RIDI_DEVICENAME, Some(ptr::null_mut()), &mut device_name_size);
-//     if device_name_size > 0 {
-//         let mut device_name: Vec<u16> = vec![0; device_name_size as usize];
-//         GetRawInputDeviceInfoW(device.hDevice, RIDI_DEVICENAME, Some(device_name.as_mut_ptr() as *mut _), &mut device_name_size);
-
-//         let device_name = String::from_utf16_lossy(&device_name);
-//         println!("Device Handle: {:?}, Device Name: {}", device.hDevice, device_name);
-//     }
-// }
