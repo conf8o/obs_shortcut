@@ -32,7 +32,7 @@ pub const X: usize = 23;
 pub const Y: usize = 24;
 pub const Z: usize = 25;
 
-pub fn init_processes() -> Vec<(usize, Process)> {
+pub fn init_shortcuts() -> Vec<(usize, Process)> {
     vec![
         (A, |client: &Client| Box::pin(set_current_program_scene(client, "ANGRY BREAK PC"))),
         (B, |client: &Client| Box::pin(set_current_program_scene(client, "Boy's Staredown"))),

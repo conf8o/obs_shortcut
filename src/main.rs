@@ -16,8 +16,8 @@ use windows::{
     Win32::System::LibraryLoader::*
 };
 mod router;
-mod processes;
-mod events;
+mod short_cut;
+mod event_table;
 
 
 #[derive(Debug, Deserialize)]
@@ -46,12 +46,12 @@ async fn init_client_from_config(path: &str) -> Result<Client> {
     }
 }
 
-fn init_router_and_table() -> (router::Router, events::EventTable) {
-    let process_pairs = processes::init_processes();
+fn init_router_and_table() -> (router::Router, event_table::EventTable) {
+    let process_pairs = short_cut::init_shortcuts();
     let router  = router::Router::init(&process_pairs);
 
     let process_indices = process_pairs.iter().map(|(i, _)| *i).collect::<Vec<usize>>();
-    let table = events::EventTable::init(&process_indices);
+    let table = event_table::EventTable::init(&process_indices);
 
     (router, table)
 }
@@ -59,11 +59,11 @@ fn init_router_and_table() -> (router::Router, events::EventTable) {
 struct ObsProcessSystem {
     client: Client,
     router: router::Router,
-    event_table: events::EventTable
+    event_table: event_table::EventTable
 }
 
 impl ObsProcessSystem {
-    fn handle_from_raw_event(&mut self, raw_event: events::RawEvent) {
+    fn handle_from_raw_event(&mut self, raw_event: event_table::RawEvent) {
         let client = &self.client;
         let router = &self.router;
         let event_table = &mut self.event_table;
@@ -159,7 +159,7 @@ unsafe extern "system" fn wnd_proc(hwnd: HWND, msg: u32, wparam: WPARAM, lparam:
                     let device_handle = raw.header.hDevice;
 
                     // 起動時、先にdevice_handleを調べる必要がある。
-                    if device_handle == HANDLE(65611) {
+                    if device_handle == HANDLE(65616) {
                         let keyboard = raw.data.keyboard;
                         let vk = keyboard.VKey;
                         let flag = keyboard.Flags;
